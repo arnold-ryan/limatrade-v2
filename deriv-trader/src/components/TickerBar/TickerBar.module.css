@@ -1,0 +1,68 @@
+.bar {
+  background: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border-color);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.scrollContainer {
+  display: flex;
+  gap: 2px;
+  padding: 4px 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.scrollContainer::-webkit-scrollbar { display: none; }
+
+.ticker {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 6px 12px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--text-primary);
+  min-width: 110px;
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+
+.ticker:hover { background: var(--bg-card); border-color: var(--border-color); }
+
+.activeTicker {
+  background: var(--bg-card) !important;
+  border-color: var(--color-primary) !important;
+}
+
+.tickerLabel {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.tickerPrice {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.arrow { font-size: 10px; color: var(--color-primary); }
+.arrowDown { font-size: 10px; color: var(--color-danger); }
+.arrowFlat { font-size: 10px; color: var(--text-muted); }
+
+/* Flash animations for price changes */
+.tickerUp { animation: flashUp 0.4s ease; }
+.tickerDown { animation: flashDown 0.4s ease; }
+
+@keyframes flashUp {
+  0%, 100% { background: transparent; }
+  40% { background: rgba(17,142,28,0.12); }
+}
+@keyframes flashDown {
+  0%, 100% { background: transparent; }
+  40% { background: rgba(236,63,63,0.1); }
+}

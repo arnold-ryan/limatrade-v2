@@ -1,0 +1,55 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.chartArea {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.chart {
+  flex: 1;
+  min-height: 0;
+  border-right: 1px solid var(--border-color);
+}
+
+.positions {
+  height: 240px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 300px;
+  flex-shrink: 0;
+  background: var(--bg-card);
+  border-left: 1px solid var(--border-color);
+  overflow-y: auto;
+}
+
+@media (max-width: 900px) {
+  .main { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    max-height: 60vh;
+    border-left: none;
+    border-top: 1px solid var(--border-color);
+  }
+  .chart { min-height: 300px; }
+  .positions { height: 180px; }
+}
