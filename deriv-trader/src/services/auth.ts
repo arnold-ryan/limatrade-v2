@@ -57,7 +57,7 @@ export async function exchangeCodeForToken(code: string, state: string): Promise
   if (state !== storedState) throw new Error('State mismatch — possible CSRF attack');
   if (!codeVerifier) throw new Error('Missing code verifier');
 
-  const resp = await fetch('/.netlify/functions/token-exchange', {
+  const resp = await fetch('/api/token-exchange', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
