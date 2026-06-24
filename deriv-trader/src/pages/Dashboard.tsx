@@ -48,11 +48,12 @@ export default function Dashboard() {
 
         const authResp = await WS.authorize(active.token);
         const authData = authResp.authorize as {
-          balance: number; currency: string; email: string
+          loginid: string; balance: number; currency: string; email: string
         } | undefined;
 
         if (authData) {
           setBalance(authData.balance, authData.currency);
+          setActiveAccount({ ...active, account: authData.loginid, currency: authData.currency });
         }
 
         // Subscribe to balance updates
