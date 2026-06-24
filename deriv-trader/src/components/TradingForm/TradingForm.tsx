@@ -79,7 +79,8 @@ export default function TradingForm() {
         }
 
         // Subscribe to ongoing proposal updates
-        const unsub = (window as Record<string, unknown>).__proposalUnsub as (() => void) | undefined;
+        const w = window as unknown as Record<string, unknown>;
+        const unsub = w.__proposalUnsub as (() => void) | undefined;
         unsub?.();
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : 'Could not get quote';
