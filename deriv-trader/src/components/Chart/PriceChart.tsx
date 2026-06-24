@@ -30,11 +30,9 @@ export default function PriceChart() {
       },
       rightPriceScale: {
         borderColor: '#2a3345',
-        textColor: '#8b949e',
       },
       timeScale: {
         borderColor: '#2a3345',
-        textColor: '#8b949e',
         timeVisible: true,
         secondsVisible: true,
       },
