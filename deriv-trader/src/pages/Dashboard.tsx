@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store';
-import { loadAccounts, getActiveAccount } from '../services/auth';
+import { loadAccounts, getActiveAccount, saveAccounts, setActiveAccount as saveActiveSession } from '../services/auth';
 import * as WS from '../services/websocket';
 import Header from '../components/Header/Header';
 import TickerBar from '../components/TickerBar/TickerBar';
@@ -23,7 +23,6 @@ export default function Dashboard() {
     if (initialized.current) return;
     initialized.current = true;
 
-    // Restore session
     const accounts = loadAccounts();
     const active = getActiveAccount();
 
@@ -35,12 +34,10 @@ export default function Dashboard() {
     setAccounts(accounts);
     setActiveAccount(active);
 
-    // Track connection state
     const offConn = WS.onConnectionChange((connected) => {
       setWsConnected(connected);
     });
 
-    // Connect and authorize
     (async () => {
       try {
         setAuthorizing(true);
@@ -48,25 +45,28 @@ export default function Dashboard() {
 
         const authResp = await WS.authorize(active.token);
         const authData = authResp.authorize as {
-          loginid: string; balance: number; currency: string; email: string
+          loginid: string; balance: number; currency: string; email: string;
         } | undefined;
 
         if (authData) {
           setBalance(authData.balance, authData.currency);
-          setActiveAccount({ ...active, account: authData.loginid, currency: authData.currency });
+          const updatedAccount = {
+            ...active,
+            account: authData.loginid,
+            currency: authData.currency,
+          };
+          setActiveAccount(updatedAccount);
+          saveAccounts([updatedAccount]);
+          saveActiveSession(updatedAccount);
         }
 
-        // Subscribe to balance updates
         WS.subscribe('balance', (data) => {
           const b = data.balance as { balance: number; currency: string } | undefined;
           if (b) setBalance(b.balance, b.currency);
         });
 
         await WS.getBalance(true);
-
         setAuthorizing(false);
-
-        // Keep-alive ping
         pingRef.current = WS.startPing();
       } catch (err) {
         console.error('Init error', err);
@@ -87,7 +87,6 @@ export default function Dashboard() {
       <Header />
       <TickerBar />
       <div className={styles.main}>
-        {/* Left: Chart + Positions */}
         <div className={styles.chartArea}>
           <div className={styles.chart}>
             <PriceChart />
@@ -96,8 +95,6 @@ export default function Dashboard() {
             <AccountInfo />
           </div>
         </div>
-
-        {/* Right: Trade Form */}
         <div className={styles.sidebar}>
           <TradingForm />
         </div>
